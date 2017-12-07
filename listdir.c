@@ -10,6 +10,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/fcntl.h>
 
 #include "file_stats.h"
 
@@ -38,6 +39,9 @@ static inline bool is_child_dir(const char *const filename) {
     const char *const fn = filename;
     return !(fn[0] == '.' && (fn[1] == 0 || (fn[1] == '.' && fn[2] == 0)));
 }
+
+// header doesn't exists in sys/stat.h on school computers
+int lstat(const char *path, struct stat *buf);
 
 typedef off_t (*const FileWalker)(
         const char *const file_path,
@@ -75,7 +79,7 @@ off_t walk_dir(const char *const dir_path, const FileWalker walker) {
         }
         strcpy(file_path_append, file->d_name);
         struct stat stats;
-        if (stat(file_path, &stats) == -1) {
+        if (lstat(file_path, &stats) == -1) {
             perror("stat");
             goto error;
         }
