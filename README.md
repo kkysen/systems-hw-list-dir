@@ -1,4 +1,4 @@
-# ListDir
+# Systems HW - List Dir
 
 Usage: (after running ```make install```)
 ```
